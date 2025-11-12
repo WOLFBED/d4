@@ -1,0 +1,5 @@
+{
+  "debian": ["ffmpeg", "vlc"],
+  "arch": ["ffmpeg", "vlc"],
+  "redhat": ["ffmpeg", "vlc"]
+}

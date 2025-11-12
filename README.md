@@ -1,5 +1,5 @@
 
-![image](/ressources/images/site_banner.avif)
+![image](/data/images/site_banner.avif)
 
 # dealer version 4 ~ includes GUI
 

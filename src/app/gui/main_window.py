@@ -10,6 +10,15 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QIcon
+from pathlib import Path
+from PySide6.QtWidgets import (
+    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QLabel, QLineEdit, QPushButton, QCheckBox,
+    QTextEdit, QFileDialog, QGroupBox, QMessageBox,
+    QProgressBar
+)
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QIcon, QFontDatabase, QFont
 
 
 class MainWindow(QMainWindow):
@@ -173,6 +182,25 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(self.update_deps_btn)
 
         main_layout.addLayout(button_layout)
+
+        # Apply custom font to progress output box
+        self._setup_progress_font()
+
+    def _setup_progress_font(self):
+        """Load and apply Victor Mono font to the progress output box."""
+        font_path = "gui/fonts/VictorMono/VictorMono-Light.otf"
+        font_id = QFontDatabase.addApplicationFont(font_path)
+        if font_id == -1:
+            # Font could not be loaded; keep default font
+            return
+        families = QFontDatabase.applicationFontFamilies(font_id)
+        if not families:
+            return
+        family = families[0]
+        font = QFont(family)
+        # You can tweak this size if needed
+        font.setPointSize(10)
+        self.progress_text.setFont(font)
 
     def _load_settings(self):
         """Load saved settings into UI."""

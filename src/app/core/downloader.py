@@ -1,33 +1,17 @@
 """
 Video download logic using yt-dlp.
 """
-import subprocess
-import signal
-import requests
+import math
 from pathlib import Path
+
+import requests
+import validators
 from PySide6.QtCore import QObject, Signal, QThreadPool
-import math
-
+# from colored import fg, bg, attr  # https://github.com/fatman2021/colored
+# from rich.console import Console
 from utils.threads import DownloadWorker
+
 from .user_agents import UserAgents
-
-from sys import exit, path, argv
-from subprocess import run
-from time import sleep
-from colored import fg, bg, attr  # https://github.com/fatman2021/colored
-# import ZyngMain as zyng
-import re
-import secrets
-import json
-from rich.console import Console
-# from resources import *
-import requests
-from datetime import datetime
-from pathlib import Path
-import math
-import os, signal, sys, subprocess, time, validators, getpass  # - don't think I need this
-
-
 
 
 class Downloader(QObject):
@@ -78,13 +62,10 @@ class Downloader(QObject):
     def get_aria2c_params(self, avg_download_speed_mbps):
         # Convert download speed from Mbps to KBps
         avg_download_speed_kbps = avg_download_speed_mbps * 1024 / 8
-
         # Calculate max concurrent downloads
         max_concurrent_downloads = max(1, min(16, math.floor(avg_download_speed_kbps / 1024)))
-
         # Calculate max connections per server
         max_connections_per_server = max(1, min(16, math.floor(avg_download_speed_kbps / 512)))
-
         # Calculate min split size and split count
         if avg_download_speed_kbps <= 512:
             min_split_size = 512  # 512 KB
@@ -95,28 +76,20 @@ class Downloader(QObject):
         else:
             min_split_size = 2048  # 2 MB
             split_count = 5
-
         # Calculate max peers for BitTorrent
         max_bt_peers = max(10, min(100, math.floor(avg_download_speed_kbps / 50)))
-
         # Calculate peer speed limit for BitTorrent
         bt_peer_speed_limit_kbps = max(256, min(2048, math.floor(avg_download_speed_kbps / 2)))
-
         # Calculate disk cache size
         disk_cache_mb = max(8, min(64, math.floor(avg_download_speed_kbps / 256)))
-
         # Calculate piece length for BitTorrent
         piece_length_kb = self.clamp_to_range(max(128, min(1024, math.floor(avg_download_speed_kbps / 16))), 1048576,
                                          1073741824)
-
         # Construct aria2c command with calculated parameters
         # aria2c_params = f"aria2c --file-allocation=none --continue=true --max-concurrent-downloads={max_concurrent_downloads} --max-connection-per-server={max_connections_per_server} --min-split-size={min_split_size}K --split={split_count} --bt-max-peers={max_bt_peers} --bt-stop-timeout=0 --bt-request-peer-speed-limit={bt_peer_speed_limit_kbps}K --bt-seed-unverified=true --lowest-speed-limit=0 --max-overall-download-limit={avg_download_speed_kbps} --allow-overwrite=true --auto-file-renaming=false --remote-time=true --summary-interval=0 --console-log-level=warn --disk-cache={disk_cache_mb}M --enable-http-pipelining=true --enable-peer-exchange=true --ftp-reget=true --http-accept-gzip=true --http-no-cache=true --http-pipelining=true --https-pipelining=true --max-resume-failure-tries=0 --metalink-enable-unique-protocol=true --parameterized-uri=true --piece-length={piece_length_kb}K --reuse-uri=true --seed-ratio=1.0"
-
         # clamp_to_range(float_to_int(piece_length_kb), 1048576, 1073741824)
         # clamp_to_range(float_to_int(piece_length_kb), 1048576, 1073741824)
-
         # --downloader-args aria2c:"-c --max-tries=0 -k 1M -j 16 --enable-http-pipelining --stream-piece-selector=geom"
-
         aria2c_params = [
             # "aria2c",
             "--file-allocation=none",
@@ -156,7 +129,6 @@ class Downloader(QObject):
             # "--seed-ratio=1.0",
         ]
         # return aria2c_params
-
         # Return a single joined string
         return " ".join(aria2c_params)
 

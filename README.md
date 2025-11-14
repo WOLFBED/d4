@@ -2,9 +2,9 @@
 
 # d4 - Video Downloader
 
-### dealer version 4 ~ includes GUI
+dealer version 4 ~ includes GUI -- A modern, user-friendly video downloader application.
 
-A modern, user-friendly video downloader application.
+# NOTE: NO WARRANTY PROVIDED AT ALL.  DO NOT USE FOR ANY PURPOSE!!!
 
 ## Features
 
@@ -25,10 +25,18 @@ A modern, user-friendly video downloader application.
 
 ## Installation
 
-1. Install dependencies:
+1. open your terminal in your downloads directory (or wherever you prefer)
+2. run:
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/wolfbed/d4 && cd d4 && chmod +x zyngInstaller.py && python zyngInstaller.py --config app_config.toml
 ```
+3. by default it will install to ~/zyng/apps/dealer/ which is okay.
+4. if the above command gives you an error, try this instead:
+```bash
+git clone https://github.com/wolfbed/d4 && cd d4 && chmod +x zyngInstaller.py && python3 zyngInstaller.py --config app_config.toml
+```
+5. it should have created a link in your applications menu
+
 
 ## TODO
 

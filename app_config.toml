@@ -13,4 +13,4 @@ gpg_key = ""
 gpg_signature = ""
 
 [required_apps]
-apps = ["deno", "aria2"]
+apps = ["deno"]

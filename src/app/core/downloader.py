@@ -276,11 +276,8 @@ class Downloader(QObject):
         if self.aria2_path and self.aria2_path.exists():
             cmd.extend(['--downloader', str(self.aria2_path)])
             # cmd.extend(['--external-downloader', str(self.aria2_path)])
-            # cmd.extend(['--downloader-args', f'aria2c:c --continue=true --file-allocation=falloc --user-agent="{self.ua_string}"'])
-            cmd.extend([
-                '--downloader-args',
-                f'aria2c:{self.get_aria2c_params(50000)} --user-agent="{ranua}"'
-            ])
+            cmd.extend(['--downloader-args', f'aria2c: -x 16 -s 16 -k 1M --continue=true --file-allocation=falloc --user-agent="{ranua}"'])
+            # cmd.extend(['--downloader-args', f'aria2c:{self.get_aria2c_params(50000)} --user-agent="{ranua}"'])
             # cmd.extend(['--external-downloader-args', 'aria2c:"-x 16 -s 16 -k 1M"'])
 
         # Progress output

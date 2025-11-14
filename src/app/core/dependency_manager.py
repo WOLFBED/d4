@@ -57,45 +57,46 @@ class DependencyManager(QObject):
 
     def get_aria2_path(self) -> str | None:
         """
+        # NOPE --- Disabling aria2 integration for now (nov 13 2025) ------------
         Determine the path to aria2c on Linux.
 
         Priority:
         1. Most recent aria2 under external/aria2/[date]/[version]/doc/bash_completion/aria2c
         2. System aria2c available in PATH
         """
-        project_root = self._get_project_root()
-        external_dir = project_root / "external" / "aria2"
-
-        # 1) Look for local aria2 builds if the external directory exists
-        if external_dir.is_dir():
-            # Date directories: external/aria2/[date]/
-            date_dirs = [d for d in external_dir.iterdir() if d.is_dir()]
-            if date_dirs:
-                # Sort by directory name (assuming YYYYMMDD or similar increasing format)
-                date_dirs_sorted = sorted(date_dirs, key=lambda p: p.name)
-                latest_date_dir = date_dirs_sorted[-1]
-
-                # Version directories: external/aria2/[latest_date]/[version]/
-                version_dirs = [d for d in latest_date_dir.iterdir() if d.is_dir()]
-                if version_dirs:
-                    version_dirs_sorted = sorted(version_dirs, key=lambda p: p.name)
-                    latest_version_dir = version_dirs_sorted[-1]
-
-                    candidate = (
-                            latest_version_dir
-                            / "doc"
-                            / "bash_completion"
-                            / "aria2c"
-                    )
-                    if candidate.is_file() and os.access(candidate, os.X_OK):
-                        return str(candidate)
-
-        # 2) Fallback to system aria2c
-        system_path = shutil.which("aria2c")
-        if system_path:
-            return system_path
-
-        # 3) Nothing found
+        # project_root = self._get_project_root()
+        # external_dir = project_root / "external" / "aria2"
+        #
+        # # 1) Look for local aria2 builds if the external directory exists
+        # if external_dir.is_dir():
+        #     # Date directories: external/aria2/[date]/
+        #     date_dirs = [d for d in external_dir.iterdir() if d.is_dir()]
+        #     if date_dirs:
+        #         # Sort by directory name (assuming YYYYMMDD or similar increasing format)
+        #         date_dirs_sorted = sorted(date_dirs, key=lambda p: p.name)
+        #         latest_date_dir = date_dirs_sorted[-1]
+        #
+        #         # Version directories: external/aria2/[latest_date]/[version]/
+        #         version_dirs = [d for d in latest_date_dir.iterdir() if d.is_dir()]
+        #         if version_dirs:
+        #             version_dirs_sorted = sorted(version_dirs, key=lambda p: p.name)
+        #             latest_version_dir = version_dirs_sorted[-1]
+        #
+        #             candidate = (
+        #                     latest_version_dir
+        #                     / "doc"
+        #                     / "bash_completion"
+        #                     / "aria2c"
+        #             )
+        #             if candidate.is_file() and os.access(candidate, os.X_OK):
+        #                 return str(candidate)
+        #
+        # # 2) Fallback to system aria2c
+        # system_path = shutil.which("aria2c")
+        # if system_path:
+        #     return system_path
+        #
+        # # 3) Nothing found
         return None
 
 

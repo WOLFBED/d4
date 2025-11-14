@@ -2,32 +2,21 @@
 External executable management.
 Handles downloading and updating yt-dlp and aria2.
 """
+
 import os
 import platform
 import shutil
 import stat
-import tarfile
-import zipfile
-from datetime import datetime
-from pathlib import Path
-import subprocess  # for optional Deno installation
-
-import requests
-from PySide6.QtCore import QObject, Signal
-import os
-import platform
-import shutil
-import stat
-import tarfile
-import zipfile
-from datetime import datetime
-from pathlib import Path
-import subprocess  # for optional Deno installation
-
-import requests
-from PySide6.QtCore import QObject, Signal
 import subprocess  # for optional Deno installation
 import sys  # for interactive prompt when Deno is missing
+import tarfile
+import zipfile
+from datetime import datetime
+from pathlib import Path
+
+import requests
+from PySide6.QtCore import QObject, Signal
+
 
 class DependencyManager(QObject):
     """Manages external dependencies (yt-dlp, aria2)."""

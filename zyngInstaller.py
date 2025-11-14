@@ -123,9 +123,9 @@ class Installer:
             for part in data["ID_LIKE"].split():
                 ids.add(part.lower())
 
-        if ids & {"arch", "manjaro", "endeavouros"}:
+        if ids & {"arch", "manjaro", "endeavouros", "CachyOS"}:
             return "arch"
-        if ids & {"debian", "ubuntu", "linuxmint", "raspbian"}:
+        if ids & {"debian", "ubuntu", "linuxmint", "raspbian", "tuxedo os", "suse", "opensuse"}:
             return "debian"
         if ids & {"fedora", "rhel", "centos", "rocky", "almalinux"}:
             return "fedora"

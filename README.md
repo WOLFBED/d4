@@ -43,9 +43,12 @@ git clone https://github.com/wolfbed/d4 && cd d4 && chmod +x zyngInstaller.py &&
 - [ ]  integrate aria2c
 - [ ]  ???
 
-## Requirements- Python 3.10+
-- linux 6+
-- python 3.10+
+## Requirements
+- x86_64 linux 6+
+- python 3.10+ & pip
 - deno (youtube will not work well without it)
 - aria2c (optional)
 - ffmpeg (optional)
+- Arch | Ubuntu | Suse | Fedora based distro
+- git
+- ~~rust~~ _(not yet needed)_

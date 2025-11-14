@@ -125,9 +125,9 @@ class Installer:
 
         if ids & {"arch", "manjaro", "endeavouros", "cachyos"}:
             return "arch"
-        if ids & {"debian", "ubuntu", "linuxmint", "raspbian", "tuxedo os", "suse", "opensuse"}:
+        if ids & {"debian", "ubuntu", "linuxmint", "raspbian", "tuxedo os", "suse", "opensuse", "popos"}:
             return "debian"
-        if ids & {"fedora", "rhel", "centos", "rocky", "almalinux"}:
+        if ids & {"fedora", "rhel", "centos", "rocky", "almalinux", "bazzite"}:
             return "fedora"
         return None
 

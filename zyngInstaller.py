@@ -428,7 +428,8 @@ class Installer:
         with open(desktop_file, "w") as f:
             f.write("[Desktop Entry]\n")
             f.write("Type=Application\n")
-            f.write(f"Name={self.appname} {self.version}\n")
+            # f.write(f"Name={self.appname} {self.version}\n")
+            f.write(f"Name={self.appname}\n")
             f.write(f"Exec={launcher_path} %U\n")
             f.write(f"Icon={icon_abs}\n")
             f.write("Terminal=false\n")

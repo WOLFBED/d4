@@ -1,14 +1,13 @@
-
 ![image](/data/images/site_banner.avif)
 
 # d4 - Video Downloader
 ## dealer version 4 ~ includes GUI
 
-A modern, user-friendly video downloader application built with PySide6 and yt-dlp.
+A modern, user-friendly video downloader application.
 
 ## Features
 
-- Download videos from various platforms supported by yt-dlp
+- Download videos from various platforms, loads
 - Batch download support
 - Configurable download options:
   - Thumbnail handling (write/embed)
@@ -29,3 +28,15 @@ A modern, user-friendly video downloader application built with PySide6 and yt-d
 ```bash
 pip install -r requirements.txt
 ```
+
+## TODO
+
+- [ ]  integrate aria2c
+- [ ]  ???
+
+## Requirements- Python 3.10+
+- linux 6+
+- python 3.10+
+- deno (youtube will not work well without it)
+- aria2c (optional)
+- ffmpeg (optional)

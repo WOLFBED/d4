@@ -52,14 +52,14 @@ class DownloadWorker(QRunnable):
                 self.signals.finished.emit(False, "Download stopped by user")
             elif return_code == 0:
                 art = r"""
-                        _
-                       /(|
-                      (  :
-                     __\  \  _____
-                   (____)  `|
-                  (____)|   |         This appears to
-                   (____).__|         be a done deal !
-                    (___)__.|_____
+        _
+       /(|
+      (  :
+     __\  \  _____
+   (____)  `|
+  (____)|   |         This appears to
+   (____).__|         be a done deal !
+    (___)__.|_____
                     """
                 # self.signals.finished.emit(True, "Download completed successfully!")
                 self.signals.finished.emit(True, art)

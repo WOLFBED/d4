@@ -7,8 +7,6 @@ from pathlib import Path
 import requests
 import validators
 from PySide6.QtCore import QObject, Signal, QThreadPool
-# from colored import fg, bg, attr  # https://github.com/fatman2021/colored
-# from rich.console import Console
 from utils.threads import DownloadWorker
 
 from .user_agents import UserAgents

@@ -10,10 +10,24 @@ import tarfile
 import zipfile
 from datetime import datetime
 from pathlib import Path
+import subprocess  # for optional Deno installation
 
 import requests
 from PySide6.QtCore import QObject, Signal
+import os
+import platform
+import shutil
+import stat
+import tarfile
+import zipfile
+from datetime import datetime
+from pathlib import Path
+import subprocess  # for optional Deno installation
 
+import requests
+from PySide6.QtCore import QObject, Signal
+import subprocess  # for optional Deno installation
+import sys  # for interactive prompt when Deno is missing
 
 class DependencyManager(QObject):
     """Manages external dependencies (yt-dlp, aria2)."""
@@ -29,12 +43,106 @@ class DependencyManager(QObject):
         self.ytdlp_dir.mkdir(exist_ok=True)
         self.aria2_dir.mkdir(exist_ok=True)
 
-    def check_dependencies(self) -> dict:
-        """Check if dependencies are available."""
+    # def check_dependencies(self) -> dict:
+    #     """Check if dependencies are available."""
+    #     ytdlp_available = self.get_ytdlp_path() is not None
+    #     aria2_available = self.get_aria2_path() is not None
+    #     deno_path = self.get_deno_path()
+    #     deno_available = deno_path is not None
+    #     if not deno_available:
+    #         self.update_progress.emit(
+    #             "Deno is not installed or not found in PATH. "
+    #             "Some functionality may be unavailable."
+    #         )
+    #     return {
+    #         "ytdlp": ytdlp_available,
+    #         "aria2": aria2_available,
+    #         "deno": deno_available,
+    #     }
+
+    def check_dependencies(self, install_deno_if_missing: bool = True) -> dict:
+        """
+        Check if dependencies are available.
+
+        If `install_deno_if_missing` is True and Deno is not found, this will:
+          * In non-interactive mode (no TTY): attempt to install Deno automatically.
+          * In interactive mode (e.g. running main.py in a terminal): ask the user
+            whether to attempt automatic installation, and respect their choice.
+        """
+        ytdlp_available = self.get_ytdlp_path() is not None
+        aria2_available = self.get_aria2_path() is not None
+
+        deno_path = self.get_deno_path()
+        deno_available = deno_path is not None
+
+        if not deno_available:
+            self.update_progress.emit(
+                "Deno is not installed or not found in PATH. "
+                "Some functionality may be unavailable."
+            )
+
+            if install_deno_if_missing:
+                # Interactive prompt only if stdin is a TTY (e.g. running main.py
+                # directly in a terminal). Otherwise, proceed without prompting.
+                user_wants_install = True
+                if sys.stdin is not None and sys.stdin.isatty():
+                    try:
+                        answer = input(
+                            "Deno is missing. Attempt automatic installation now? [Y/n]: "
+                        ).strip().lower()
+                        user_wants_install = (answer in ("", "y", "yes"))
+                    except EOFError:
+                        # If input is not available, fall back to auto-install
+                        user_wants_install = True
+
+                if user_wants_install:
+                    self.update_progress.emit("Attempting to install Deno...")
+                    deno_available = self.install_deno_if_missing()
+                else:
+                    self.update_progress.emit(
+                        "Skipping automatic Deno installation at user request."
+                    )
+
         return {
-            'ytdlp': self.get_ytdlp_path() is not None,
-            'aria2': self.get_aria2_path() is not None,
+            "ytdlp": ytdlp_available,
+            "aria2": aria2_available,
+            "deno": deno_available,
         }
+
+
+
+
+
+
+    # def check_dependencies(self, install_deno_if_missing: bool = False) -> dict:
+    #     """
+    #     Check if dependencies are available.
+    #
+    #     If `install_deno_if_missing` is True and Deno is not found, this will
+    #     attempt to install it on supported Linux distributions (Arch, Debian,
+    #     Fedora-based) using the system package manager.
+    #     """
+    #     ytdlp_available = self.get_ytdlp_path() is not None
+    #     aria2_available = self.get_aria2_path() is not None
+    #
+    #     deno_path = self.get_deno_path()
+    #     deno_available = deno_path is not None
+    #
+    #     if not deno_available:
+    #         self.update_progress.emit(
+    #             "Deno is not installed or not found in PATH. "
+    #             "Some functionality may be unavailable."
+    #         )
+    #         if install_deno_if_missing:
+    #             self.update_progress.emit("Attempting to install Deno...")
+    #             deno_available = self.install_deno_if_missing()
+    #
+    #     return {
+    #         "ytdlp": ytdlp_available,
+    #         "aria2": aria2_available,
+    #         "deno": deno_available,
+    #     }
+
 
     def _get_project_root(self) -> Path:
         """
@@ -122,6 +230,168 @@ class DependencyManager(QObject):
             if exec_path.exists():
                 return exec_path
         return None
+
+
+    # def get_deno_path(self) -> Path:
+    #     """Find the latest version of deno in version subdirectories."""
+    #     base_dir = Path.home() / ".deno/bin"
+    #     return self._find_latest_executable(base_dir, "deno")
+
+    def get_deno_path(self) -> Path | None:
+        """
+        Determine the path to the Deno executable.
+
+        Priority:
+        1. System `deno` available in PATH
+        2. Standard user installation under ~/.deno/bin/deno
+        """
+        # 1) Check system PATH
+        system_path = shutil.which("deno")
+        if system_path:
+            return Path(system_path)
+
+        # 2) Check typical local installation directory
+        home_deno = Path.home() / ".deno" / "bin" / "deno"
+        if home_deno.is_file() and os.access(home_deno, os.X_OK):
+            return home_deno
+
+        # 3) Nothing found
+        return None
+
+
+
+    def _detect_linux_family(self) -> str | None:
+        """
+        Detect Linux distribution family based on /etc/os-release.
+
+        Returns one of: "arch", "debian", "fedora", or None if unknown.
+        """
+        if platform.system() != "Linux":
+            return None
+
+        os_release = Path("/etc/os-release")
+        if not os_release.is_file():
+            return None
+
+        data: dict[str, str] = {}
+        try:
+            with os_release.open("r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or "=" not in line or line.startswith("#"):
+                        continue
+                    key, value = line.split("=", 1)
+                    data[key.strip()] = value.strip().strip('"')
+        except Exception:
+            return None
+
+        id_like = data.get("ID_LIKE", "").lower()
+        distro_id = data.get("ID", "").lower()
+
+        tokens = set((id_like + " " + distro_id).split())
+        if any(t in tokens for t in ("arch", "artix", "manjaro")):
+            return "arch"
+        if any(t in tokens for t in ("debian", "ubuntu", "linuxmint", "pop")):
+            return "debian"
+        if any(t in tokens for t in ("fedora", "rhel", "centos", "rocky", "alma")):
+            return "fedora"
+
+        return None
+
+    def install_deno_if_missing(self) -> bool:
+        """
+        Install Deno if it is currently missing, for supported systems.
+
+        Currently supported:
+          - Arch-based (pacman)
+          - Debian-based (apt-get)
+          - Fedora-based (dnf)
+
+        Returns True if Deno is available after this call, False otherwise.
+        """
+        # If Deno is already present, nothing to do
+        if self.get_deno_path() is not None:
+            self.update_progress.emit("Deno is already installed.")
+            return True
+
+        system = platform.system()
+        if system != "Linux":
+            self.update_progress.emit(
+                f"Automatic Deno installation is only supported on Linux. "
+                f"Detected platform: {system}"
+            )
+            return False
+
+        family = self._detect_linux_family()
+        if family is None:
+            self.update_progress.emit(
+                "Could not detect a supported Linux distribution family for Deno installation. "
+                "Please install Deno manually from https://deno.land/#installation."
+            )
+            return False
+
+        if family == "arch":
+            cmd = ["sudo", "pacman", "-S", "--noconfirm", "deno"]
+        elif family == "debian":
+            # Run update + install; if update fails (e.g. no sudo), installation will fail too.
+            cmd = ["sudo", "apt-get", "install", "-y", "deno"]
+            update_cmd = ["sudo", "apt-get", "update"]
+        elif family == "fedora":
+            cmd = ["sudo", "dnf", "install", "-y", "deno"]
+        else:
+            self.update_progress.emit(
+                f"Linux family '{family}' is not supported for automatic Deno installation."
+            )
+            return False
+
+        try:
+            if family == "debian":
+                self.update_progress.emit("Running: sudo apt-get update")
+                subprocess.run(
+                    update_cmd,
+                    check=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                )
+
+            self.update_progress.emit(f"Running: {' '.join(cmd)}")
+            result = subprocess.run(
+                cmd,
+                check=False,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+
+            if result.returncode != 0:
+                self.update_progress.emit(
+                    "Deno installation command failed. "
+                    "You may need to run it manually in a terminal with sufficient privileges."
+                )
+                # Log stderr if needed for debugging; not emitted to UI here.
+                return False
+
+        except FileNotFoundError:
+            # sudo or package manager not found
+            self.update_progress.emit(
+                "Failed to run package manager command for Deno installation. "
+                "Ensure `sudo` and the appropriate package manager are installed."
+            )
+            return False
+        except Exception as e:
+            self.update_progress.emit(f"Unexpected error while installing Deno: {e}")
+            return False
+
+        # Re-check if Deno is now available
+        if self.get_deno_path() is not None:
+            self.update_progress.emit("Deno installed successfully.")
+            return True
+
+        self.update_progress.emit(
+            "Deno installation command completed, but Deno was still not found. "
+            "Please verify the installation manually."
+        )
+        return False
+
 
     def update_all(self) -> bool:
         """Update all dependencies."""

@@ -1,7 +1,8 @@
 ![image](/data/images/site_banner.avif)
 
 # d4 - Video Downloader
-## dealer version 4 ~ includes GUI
+
+### dealer version 4 ~ includes GUI
 
 A modern, user-friendly video downloader application.
 

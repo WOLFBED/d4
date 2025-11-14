@@ -49,13 +49,27 @@ class AppCore(QObject):
         for key, value in settings_dict.items():
             self.settings_manager.set_setting(key, value)
 
-    def check_dependencies(self):
-        """Check if required dependencies are available."""
-        return self.dependency_manager.check_dependencies()
+    # def check_dependencies(self):
+    #     """Check if required dependencies are available."""
+    #     return self.dependency_manager.check_dependencies()
+
+    def check_dependencies(self, install_deno_if_missing: bool = False):
+        """
+        Check if required dependencies are available.
+
+        If install_deno_if_missing is True, this will attempt to install Deno
+        on supported Linux distributions when it is not found.
+        """
+        return self.dependency_manager.check_dependencies(
+            install_deno_if_missing=install_deno_if_missing
+        )
 
     def update_dependencies(self):
         """Update external dependencies (yt-dlp, aria2)."""
         return self.dependency_manager.update_all()
+
+
+
 
     def start_download(self, url, output_path, options):
         """

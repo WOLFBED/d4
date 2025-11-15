@@ -36,6 +36,8 @@ dealer version 4 ~ includes GUI -- A video downloader.  It deals.
 ***
 
 ## Installation (work in progress)
+
+### N.B. I'm currently working on making an AppImage for this, that will be way easier and cleaner to install.  The following only partially works and will dirty-up your system.  Avoid for now unless you really know what you're doing.
 These commands take care of all the dependencies at once and install dealer to ~/zyng/apps/dealer/.  Be aware this *may* install on your system:
 - git
 - deno
@@ -44,7 +46,6 @@ These commands take care of all the dependencies at once and install dealer to ~
 - python3.12-venv
 - python3-pip
 - ffmpeg
-
 
 ### For Arch based distros
 Tested on Garuda, CachyOS, and Manjaro.
@@ -111,19 +112,21 @@ chmod +x zyngInstaller.py suse_install.sh && \
 
 ## TODO
 
-- [ ]  integrate aria2c
-- [ ]  fix deno path for ubuntu
-- [ ]  remove fonts and just have d4 use generic monospace font
-- [ ]  remove git requirement on end user's system by downloading release .zip file, then running installer. sh script that installs all the missing stuff -- this makes it so the user doesn't have to copy a huge chunk of text into the terminal
+- [ ]  make installer (bundle: ffmpeg, ffprobe, deno, python-certifi, brotli, websockets, requests, curl_cffi, mutagen, atomicparsley, pyxattr, pycryptodome, phantomjs, secretstorage, etc.)
+- [ ]  integrate aria2
+- [ ]  ensure yt-dlp is aware of path to ffmpeg, deno, aria2, etc.
+- [ ]  ~~fix deno path for ubuntu~~
+- [ ]  remove fonts and just have dealer use generic monospace font -- MAKE SURE THIS ACTUALLY WORKS!!!!!!
+- [ ]  remove git requirement on end user's system
 - [ ]  ???
 
 ## Requirements
 - x86_64 linux 6+
 - python 3.10+ & pip
-- deno (youtube will not work well without it)
-- aria2c (optional)
-- ffmpeg (optional)
-- git
+- ~~deno (youtube will not work well without it)~~
+- ~~aria2c (optional)~~
+- ~~ffmpeg (optional)~~
+- ~~git~~
 - ~~rust~~ _(not yet needed)_
 
 tested on:

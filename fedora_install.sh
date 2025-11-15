@@ -18,7 +18,7 @@ cd $installer_dir
 #curl -L -o app_config.toml https://raw.githubusercontent.com/WOLFBED/d4/refs/heads/master/app_config.toml
 curl -L https://github.com/WOLFBED/d4/archive/refs/tags/tempo.zip -o dealer.zip && \
 unzip dealer.zip
-cd dealer
+cd d4-tempo
 
 # Path to the TOML file
 TOML_FILE="app_config.toml"

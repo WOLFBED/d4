@@ -36,6 +36,10 @@ echo "[*] Done."
 #    esac
 #fi
 
+echo "[*] Continuing with d4 setup…"
+
+python zyngInstaller.py --config app_config.toml
+
 echo "[*] d4 installer finished."
 
 if [[ -d "$HOME/Desktop/d4" ]]; then

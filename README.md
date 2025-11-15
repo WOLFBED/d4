@@ -2,14 +2,20 @@
 
 # d4 - Video Downloader
 
-dealer version 4 ~ includes GUI -- A modern, user-friendly video downloader application.
+dealer version 4 ~ includes GUI -- A video downloader.  It deals.
 
-# NOTE: NO WARRANTY PROVIDED AT ALL.  DO NOT USE FOR ANY PURPOSE!!!
+&nbsp;
+***
+
+# !!! ABSOLUTELY NO WARRANTY PROVIDED AT ALL !!! <br> !!! DO NOT USE FOR ANY PURPOSE !!!
+
+&nbsp;
+***
 
 ## Features
 
-- Download videos from various platforms, loads
-- Batch download support
+- Download videos from many sources
+- Batch download support, i.e. use a file with a list of URLs to download all at once
 - Configurable download options:
   - Thumbnail handling (write/embed)
   - Metadata and comments
@@ -20,11 +26,25 @@ dealer version 4 ~ includes GUI -- A modern, user-friendly video downloader appl
 - SOCKS5 proxy support
 - Cookie file support
 - Persistent settings
+- Uses download archive file to avoid re-downloading the same videos
+- Deno integration (for _dealing_ with pesky youtube non-sense)
 - Multi-threaded downloads with progress tracking
-- Automatic dependency management (yt-dlp, aria2)
+- Automatic dependency management (yt-dlp, aria2, etc.)
+- Gud
+
+&nbsp;
+***
 
 ## Installation (work in progress)
-These commands take care of all the dependencies at once and install dealer to ~/zyng/apps/dealer/.
+These commands take care of all the dependencies at once and install dealer to ~/zyng/apps/dealer/.  Be aware this *may* install on your system:
+- git
+- deno
+- curl
+- unzip
+- python3.12-venv
+- python3-pip
+- ffmpeg
+
 
 ### For Arch based distros
 Tested on Garuda, CachyOS, and Manjaro.
@@ -49,12 +69,21 @@ chmod +x zyngInstaller.py ubuntu_install.sh && \
 Tested on Fedora KDE and Bazzite.
 ```bash
 sudo dnf update && \
-sudo dnf install -y git curl unzip python3.12-venv python3-pip ffmpeg && \
-curl -fsSL https://deno.land/install.sh | sh && \
-cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4 && \
+sudo dnf install -y curl unzip python3.12-venv python3-pip ffmpeg && \
+curl -L https://github.com/wolfbed/d4/releases/latest/download/d4-latest.zip -o d4.zip && \
+unzip d4.zip -d d4 && \
+cd d4 && \
 chmod +x zyngInstaller.py fedora_install.sh && \
 ./fedora_install.sh
+
+#sudo dnf update && \
+#sudo dnf install -y git curl unzip python3.12-venv python3-pip ffmpeg && \
+#curl -fsSL https://deno.land/install.sh | sh && \
+#cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4 && \
+#chmod +x zyngInstaller.py fedora_install.sh && \
+#./fedora_install.sh
 ```
+
 
 ### For Suse based distros
 Tested on OpenSUSE Tumbleweed.
@@ -66,6 +95,9 @@ git clone https://github.com/wolfbed/d4 && \ cd d4 && \
 chmod +x zyngInstaller.py suse_install.sh && \
 ./suse_install.sh
 ```
+
+&nbsp;
+***
 
 ## TODO
 

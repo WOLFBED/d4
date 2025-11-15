@@ -70,7 +70,7 @@ Tested on Fedora KDE and Bazzite.
 ```bash
 sudo dnf update && \
 sudo dnf install -y curl unzip python3.12-venv python3-pip ffmpeg && \
-curl -L https://github.com/wolfbed/d4/releases/latest/download/d4-latest.zip -o d4.zip && \
+curl -L https://github.com/WOLFBED/d4/archive/refs/tags/tempo.zip -o d4.zip && \
 unzip d4.zip -d d4 && \
 cd d4 && \
 chmod +x zyngInstaller.py fedora_install.sh && \

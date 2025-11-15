@@ -23,26 +23,8 @@ dealer version 4 ~ includes GUI -- A modern, user-friendly video downloader appl
 - Multi-threaded downloads with progress tracking
 - Automatic dependency management (yt-dlp, aria2)
 
-## Installation (this is incomplete)
-
-1. Update your system
-2. open your terminal in your downloads directory (or wherever you prefer)
-2. run:
-```bash
-git clone https://github.com/wolfbed/d4 && cd d4 && \
-chmod +x zyngInstaller.py && python zyngInstaller.py --config app_config.toml
-```
-3. by default it will install to ~/zyng/apps/dealer/ which is okay.
-4. if the above command gives you an error, try this instead:
-```bash
-git clone https://github.com/wolfbed/d4 && cd d4 && \
-chmod +x zyngInstaller.py && python3 zyngInstaller.py --config app_config.toml
-```
-5. it should have created a link in your applications menu
-
-
+## Installation (work in progress)
 These commands take care of all the dependencies at once and install dealer to ~/zyng/apps/dealer/.
-
 
 ### For Arch based distros
 Tested on Garuda, CachyOS, and Manjaro.
@@ -84,7 +66,6 @@ git clone https://github.com/wolfbed/d4 && \ cd d4 && \
 chmod +x zyngInstaller.py suse_install.sh && \
 ./suse_install.sh
 ```
-
 
 ## TODO
 

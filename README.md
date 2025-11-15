@@ -72,6 +72,7 @@ chmod +x zyngInstaller.py suse_install.sh && \
 - [ ]  integrate aria2c
 - [ ]  fix deno path for ubuntu
 - [ ]  remove fonts and just have d4 use generic monospace font
+- [ ]  remove git requirement on end user's system by downloading release .zip file, then running installer. sh script that installs all the missing stuff -- this makes it so the user doesn't have to copy a huge chunk of text into the terminal
 - [ ]  ???
 
 ## Requirements

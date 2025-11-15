@@ -59,22 +59,32 @@ Tested on Pop!_OS, TUXEDO OS, and Ubuntu.
 ```bash
 sudo apt update && \
 sudo apt install -y git curl unzip python3.12-venv python3-pip ffmpeg && \
-curl -fsSL https://deno.land/install.sh | sh && \
-cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4 && \
-chmod +x zyngInstaller.py ubuntu_install.sh && \
+curl -L https://github.com/WOLFBED/d4/archive/refs/tags/tempo.zip -o d4.zip && \
+unzip d4.zip -d d4 && \
+cd d4 && \
+chmod +x zyngInstaller.py fedora_install.sh && \
 ./ubuntu_install.sh
+
+#sudo apt update && \
+#sudo apt install -y git curl unzip python3.12-venv python3-pip ffmpeg && \
+#curl -fsSL https://deno.land/install.sh | sh && \
+#cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4 && \
+#chmod +x zyngInstaller.py ubuntu_install.sh && \
+#./ubuntu_install.sh
 ```
 
 ### For Fedora based distros
 Tested on Fedora KDE and Bazzite.
 ```bash
 sudo dnf update && \
-sudo dnf install -y curl unzip python3.12-venv python3-pip ffmpeg && \
-curl -L https://github.com/WOLFBED/d4/archive/refs/tags/tempo.zip -o d4.zip && \
-unzip d4.zip -d d4 && \
-cd d4 && \
-chmod +x zyngInstaller.py fedora_install.sh && \
+sudo dnf install -y curl unzip && \
+curl -L https://github.com/WOLFBED/d4/blob/master/fedora_install.sh -o fedora_install.sh && \
+chmod +x fedora_install.sh && \
 ./fedora_install.sh
+
+#unzip dealer.zip -d dealer_install && \
+#cd dealer_install && \
+
 
 #sudo dnf update && \
 #sudo dnf install -y git curl unzip python3.12-venv python3-pip ffmpeg && \

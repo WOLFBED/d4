@@ -4,11 +4,12 @@ default_install_root = "~/zyng/apps/dealer/"
 setup_venv = true
 entrypoint = "src/app/main.py"
 icon = "data/icons/d4.png"
+installer_dir = "dealer_install"
 
 [source]
-type = "git"
-location = "https://github.com/WOLFBED/d4"
-sha256 = ""
+type = "url"
+location = "https://github.com/WOLFBED/d4/archive/refs/tags/tempo.zip"
+sha256 = "fb4284926ff4d9f210606ab808471ea795865e267ce2bc08b154a63df9682e85"
 gpg_key = ""
 gpg_signature = ""
 

@@ -78,7 +78,7 @@ Tested on Fedora KDE and Bazzite.
 ```bash
 sudo dnf update && \
 sudo dnf install -y curl unzip && \
-curl -L https://github.com/WOLFBED/d4/blob/master/fedora_install.sh -o fedora_install.sh && \
+curl -L https://raw.githubusercontent.com/WOLFBED/d4/refs/heads/master/fedora_install.sh -o fedora_install.sh && \
 chmod +x fedora_install.sh && \
 ./fedora_install.sh
 

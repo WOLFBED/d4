@@ -112,8 +112,8 @@ chmod +x zyngInstaller.py suse_install.sh && \
 
 ## TODO
 
-- [ ]  make installer (bundle: ffmpeg, ffprobe, deno, python-certifi, brotli, websockets, requests, curl_cffi, mutagen, atomicparsley, pyxattr, pycryptodome, phantomjs, secretstorage, etc.)
-- [ ]  integrate aria2
+- [ ]  make AppImage installer (bundle: ffmpeg, ffprobe, deno, python-certifi, brotli, websockets, requests, curl_cffi, mutagen, atomicparsley, pyxattr, pycryptodome, phantomjs, secretstorage, aria2, etc.)
+- [ ]  integrate __aria2__ -- Dunno about this yet
 - [ ]  ensure yt-dlp is aware of path to ffmpeg, deno, aria2, etc.
 - [ ]  ~~fix deno path for ubuntu~~
 - [ ]  remove fonts and just have dealer use generic monospace font -- MAKE SURE THIS ACTUALLY WORKS!!!!!!
@@ -129,9 +129,4 @@ chmod +x zyngInstaller.py suse_install.sh && \
 - ~~git~~
 - ~~rust~~ _(not yet needed)_
 
-tested on:
-Fedora KDE 43 -- !! zyngInstaller doesn't work on this one - couldn't install deno !!
-Manjaro Cinammon 25.0.3
-Pop!_OS 22.04 LTS -- !! zyngInstaller doesn't work on this one - couldn't install deno !!
-TUXEDO OS 2025-11-06-1317
-Ubuntu 24.04.3 -- !! zyngInstaller doesn't work on this one - couldn't install deno !!
+

@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
 
     def _setup_ui(self):
         """Set up the user interface."""
-        self.setWindowTitle("d4 - Video Downloader")
+        self.setWindowTitle("dealer")
         self.setMinimumSize(800, 700)
 
         # Try to load icon

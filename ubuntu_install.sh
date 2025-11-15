@@ -38,7 +38,7 @@ echo "[*] Done."
 
 echo "[*] Continuing with d4 setup…"
 
-python zyngInstaller.py --config app_config.toml
+python3 zyngInstaller.py --config app_config.toml
 
 echo "[*] d4 installer finished."
 

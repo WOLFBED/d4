@@ -4,7 +4,7 @@ set -euo pipefail
 installer_dir=dealer_install
 
 # --- Fedora prerequisites ---
-sudo dnf install -y git python3.12-venv python3-pip ffmpeg
+sudo dnf install -y git python3-virtualenv python3-pip ffmpeg
 
 # --- Install Deno (optional dependency you had in your original commands) ---
 curl -fsSL https://deno.land/install.sh | sh

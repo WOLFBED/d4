@@ -472,7 +472,7 @@ def main():
                 ensure_dir(inst.install_root)
 
         # Only *checks* required apps; does not install via a package manager.
-        inst.ensure_required_apps()
+        # inst.ensure_required_apps()  # <-- this is now handled by the installer.py script -- actuly, just not doing this
         inst.install()
 
 

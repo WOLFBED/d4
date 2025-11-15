@@ -70,7 +70,8 @@ chmod +x zyngInstaller.py suse_install.sh && \
 ## TODO
 
 - [ ]  integrate aria2c
-- [ ]  fix deno path for ubuntu 
+- [ ]  fix deno path for ubuntu
+- [ ]  remove fonts and just have d4 use generic monospace font
 - [ ]  ???
 
 ## Requirements

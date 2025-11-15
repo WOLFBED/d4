@@ -23,19 +23,67 @@ dealer version 4 ~ includes GUI -- A modern, user-friendly video downloader appl
 - Multi-threaded downloads with progress tracking
 - Automatic dependency management (yt-dlp, aria2)
 
-## Installation
+## Installation (this is incomplete)
 
-1. open your terminal in your downloads directory (or wherever you prefer)
+1. Update your system
+2. open your terminal in your downloads directory (or wherever you prefer)
 2. run:
 ```bash
-git clone https://github.com/wolfbed/d4 && cd d4 && chmod +x zyngInstaller.py && python zyngInstaller.py --config app_config.toml
+git clone https://github.com/wolfbed/d4 && cd d4 && \
+chmod +x zyngInstaller.py && python zyngInstaller.py --config app_config.toml
 ```
 3. by default it will install to ~/zyng/apps/dealer/ which is okay.
 4. if the above command gives you an error, try this instead:
 ```bash
-git clone https://github.com/wolfbed/d4 && cd d4 && chmod +x zyngInstaller.py && python3 zyngInstaller.py --config app_config.toml
+git clone https://github.com/wolfbed/d4 && cd d4 && \
+chmod +x zyngInstaller.py && python3 zyngInstaller.py --config app_config.toml
 ```
 5. it should have created a link in your applications menu
+
+
+These commands take care of all the dependencies at once and install dealer to ~/zyng/apps/dealer/.
+
+
+### For Arch based distros
+Tested on Garuda, CachyOS, and Manjaro.
+```bash
+cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4 && \
+chmod +x zyngInstaller.py arch_install.sh && \
+./arch_install.sh
+```
+
+### For Ubunto based distros
+Tested on Pop!_OS, TUXEDO OS, and Ubuntu.
+```bash
+sudo apt update && \
+sudo apt install -y git curl unzip && \
+curl -fsSL https://deno.land/install.sh | sh && \
+cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4 && \
+chmod +x zyngInstaller.py ubuntu_install.sh && \
+./ubuntu_install.sh
+```
+
+### For Fedora based distros
+Tested on Fedora KDE and Bazzite.
+```bash
+sudo dnf update && \
+sudo dnf install -y git curl unzip && \
+curl -fsSL https://deno.land/install.sh | sh && \
+cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4 && \
+chmod +x zyngInstaller.py fedora_install.sh && \
+./fedora_install.sh
+```
+
+### For Suse based distros
+Tested on OpenSUSE Tumbleweed.
+```bash
+sudo zypper refresh && \
+sudo zypper install -y git curl unzip && \
+curl -fsSL https://deno.land/install.sh | sh && \
+git clone https://github.com/wolfbed/d4 && \ cd d4 && \ 
+chmod +x zyngInstaller.py suse_install.sh && \
+./suse_install.sh
+```
 
 
 ## TODO
@@ -49,6 +97,12 @@ git clone https://github.com/wolfbed/d4 && cd d4 && chmod +x zyngInstaller.py &&
 - deno (youtube will not work well without it)
 - aria2c (optional)
 - ffmpeg (optional)
-- Arch | Ubuntu | Suse | Fedora based distro
 - git
 - ~~rust~~ _(not yet needed)_
+
+tested on:
+Fedora KDE 43 -- !! zyngInstaller doesn't work on this one - couldn't install deno !!
+Manjaro Cinammon 25.0.3
+Pop!_OS 22.04 LTS -- !! zyngInstaller doesn't work on this one - couldn't install deno !!
+TUXEDO OS 2025-11-06-1317
+Ubuntu 24.04.3 -- !! zyngInstaller doesn't work on this one - couldn't install deno !!

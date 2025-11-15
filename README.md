@@ -67,6 +67,20 @@ chmod +x zyngInstaller.py suse_install.sh && \
 ./suse_install.sh
 ```
 
+Archive:  /home/pierre/.deno/bin/deno.zip
+  inflating: /home/pierre/.deno/bin/deno  
+`Deno was installed successfully to /home/pierre/.deno/bin/deno
+
+Deno was added to the PATH.
+You may need to restart your shell for it to become available.
+
+info: backing '/home/pierre/.bashrc' up to '/home/pierre/.deno/.shellRcBackups/.bashrc.bak'
+Run '/home/pierre/.deno/bin/deno --help' to get started
+
+Stuck? Join our Discord https://discord.gg/deno
+fatal: destination path 'd4' already exists and is not an empty directory.`
+
+
 ## TODO
 
 - [ ]  integrate aria2c

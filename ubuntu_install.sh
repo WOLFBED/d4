@@ -22,6 +22,20 @@ deno --version
 
 echo "[*] Done."
 
+#if [[ -d "d4" ]]; then
+#    echo "[*] ~/Desktop/d4 already exists."
+#    read -r -p "Delete it and continue? [y/N]: " RESP
+#    case "$RESP" in
+#        [yY]|[yY][eE][sS])
+#            rm -rf d4
+#            ;;
+#        *)
+#            echo "[*] Exiting installer to avoid overwriting existing directory."
+#            exit 1
+#            ;;
+#    esac
+#fi
+
 echo "[*] d4 installer finished."
 
 if [[ -d "$HOME/Desktop/d4" ]]; then

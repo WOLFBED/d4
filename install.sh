@@ -29,9 +29,12 @@ TOML_FILE="app_config.toml"
 #curl -L -o zyngInstaller.py https://raw.githubusercontent.com/WOLFBED/d4/main/zyngInstaller.py
 #curl -L -o app_config.toml       https://raw.githubusercontent.com/WOLFBED/d4/main/app_config.toml
 
-#chmod +x zyngInstaller.py
+echo "[+] Installing dependencies…"
+sudo pacman -S --noconfirm \
+    git curl unzip ffmpeg python python-pip python-virtualenv deno
 
 # --- Run installer (auto-yes recommended to skip prompts) ---
+echo "[+] Running Zyng installer…"
 python zyngInstaller.py --config app_config.toml --skip-fonts
 
 echo "[*] d4 installer finished."

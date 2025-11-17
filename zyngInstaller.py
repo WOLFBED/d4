@@ -576,7 +576,7 @@ class Installer:
             f.write(f"Exec={launcher} %U\n")
             f.write(f"Icon={icon_abs}\n")
             f.write("Terminal=false\n")
-            f.write("Categories=Internet;Application;\n")
+            f.write("Categories=Network;Internet;WebBrowser;Application;\n")
 
         desktop.chmod(0o644)
         print(f"[+] desktop entry: {desktop}")

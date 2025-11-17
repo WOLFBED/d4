@@ -2,7 +2,7 @@
 # this for arch-based: garuda, manjaro, cachyos
 set -euo pipefail
 
-installer_dir="dealer_install"
+installer_dir="d4"
 
 # --- Prepare workspace ---
 cd "$HOME/Desktop/"

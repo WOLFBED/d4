@@ -321,105 +321,105 @@ class Installer:
         else:
             raise SystemExit(f"Unknown source type: {stype}")
 
-        def clone_git(self, url, ref=None):
-            git_bin = shutil.which("git")
-            if not git_bin:
-                raise SystemExit("git not found; required for git source type.")
-            clone_dir = self.tmpdir / "src"
-            print(f"  - git clone {url} → {clone_dir}")
-            run([git_bin, "clone", "--depth", "1", url, str(clone_dir)])
+    def clone_git(self, url, ref=None):
+        git_bin = shutil.which("git")
+        if not git_bin:
+            raise SystemExit("git not found; required for git source type.")
+        clone_dir = self.tmpdir / "src"
+        print(f"  - git clone {url} → {clone_dir}")
+        run([git_bin, "clone", "--depth", "1", url, str(clone_dir)])
+        if ref:
+            try:
+                run([git_bin, "-C", str(clone_dir), "fetch", "--depth", "1", "origin", ref])
+                run([git_bin, "-C", str(clone_dir), "checkout", ref])
+            except subprocess.CalledProcessError:
+                eprint("Warning: failed to fetch/ref; using HEAD")
+        self.source_root = clone_dir
+        return clone_dir
+
+    def update_git(self):
+        """
+        Update an existing git-based installation in-place and refresh dependencies.
+
+        Assumes the initial install was done via clone_git() and that the installed
+        directory is still a git checkout. If a virtualenv exists at <repo>/venv
+        and requirements.txt is present, this will re-run:
+
+            pip install -r requirements.txt
+
+        inside that virtualenv.
+        """
+        if self.source_cfg.get("type") != "git":
+            raise SystemExit("update-git is only valid when source.type = 'git' in the config")
+
+        git_bin = shutil.which("git")
+        if not git_bin:
+            raise SystemExit("git not found; required for git source type.")
+
+        # Prefer the current symlink if it exists, otherwise fall back
+        # to the versioned install directory.
+        if self.current_symlink.is_symlink() and self.current_symlink.exists():
+            repo_dir = self.current_symlink.resolve()
+        elif self.versioned_dir.exists():
+            repo_dir = self.versioned_dir
+        else:
+            raise SystemExit("No existing installation found to update.")
+
+        if not (repo_dir / ".git").exists():
+            raise SystemExit(f"{repo_dir} is not a git checkout (missing .git directory).")
+
+        print(f"[+] Updating git repo in {repo_dir}")
+        run([git_bin, "-C", str(repo_dir), "fetch", "--all", "--tags"])
+
+        ref = self.source_cfg.get("ref")
+        try:
             if ref:
-                try:
-                    run([git_bin, "-C", str(clone_dir), "fetch", "--depth", "1", "origin", ref])
-                    run([git_bin, "-C", str(clone_dir), "checkout", ref])
-                except subprocess.CalledProcessError:
-                    eprint("Warning: failed to fetch/ref; using HEAD")
-            self.source_root = clone_dir
-            return clone_dir
-
-        def update_git(self):
-            """
-            Update an existing git-based installation in-place and refresh dependencies.
-
-            Assumes the initial install was done via clone_git() and that the installed
-            directory is still a git checkout. If a virtualenv exists at <repo>/venv
-            and requirements.txt is present, this will re-run:
-
-                pip install -r requirements.txt
-
-            inside that virtualenv.
-            """
-            if self.source_cfg.get("type") != "git":
-                raise SystemExit("update-git is only valid when source.type = 'git' in the config")
-
-            git_bin = shutil.which("git")
-            if not git_bin:
-                raise SystemExit("git not found; required for git source type.")
-
-            # Prefer the current symlink if it exists, otherwise fall back
-            # to the versioned install directory.
-            if self.current_symlink.is_symlink() and self.current_symlink.exists():
-                repo_dir = self.current_symlink.resolve()
-            elif self.versioned_dir.exists():
-                repo_dir = self.versioned_dir
+                print(f"  - checking out ref {ref}")
+                run([git_bin, "-C", str(repo_dir), "checkout", ref])
+                print("  - pulling latest changes for ref")
+                run([git_bin, "-C", str(repo_dir), "pull", "--ff-only"])
             else:
-                raise SystemExit("No existing installation found to update.")
+                print("  - pulling latest changes on current branch")
+                run([git_bin, "-C", str(repo_dir), "pull", "--ff-only"])
+        except subprocess.CalledProcessError as exc:
+            eprint(f"[!] git update failed: {exc}")
+            raise SystemExit("Git update failed; installation left unchanged.")
 
-            if not (repo_dir / ".git").exists():
-                raise SystemExit(f"{repo_dir} is not a git checkout (missing .git directory).")
+        # --- Reuse existing venv and re-install requirements, if present ---
+        venv_path = repo_dir / "venv"
+        req = repo_dir / "requirements.txt"
 
-            print(f"[+] Updating git repo in {repo_dir}")
-            run([git_bin, "-C", str(repo_dir), "fetch", "--all", "--tags"])
+        if not venv_path.exists():
+            print("[*] No existing virtualenv found at:", venv_path)
+            print("    Skipping dependency reinstall. If you changed requirements.txt,")
+            print("    consider running a full install or creating a venv manually.")
+            print("[+] Git update complete.")
+            return
 
-            ref = self.source_cfg.get("ref")
-            try:
-                if ref:
-                    print(f"  - checking out ref {ref}")
-                    run([git_bin, "-C", str(repo_dir), "checkout", ref])
-                    print("  - pulling latest changes for ref")
-                    run([git_bin, "-C", str(repo_dir), "pull", "--ff-only"])
-                else:
-                    print("  - pulling latest changes on current branch")
-                    run([git_bin, "-C", str(repo_dir), "pull", "--ff-only"])
-            except subprocess.CalledProcessError as exc:
-                eprint(f"[!] git update failed: {exc}")
-                raise SystemExit("Git update failed; installation left unchanged.")
+        if not req.exists():
+            print("[*] No requirements.txt found at:", req)
+            print("    Skipping dependency reinstall. Your code changes are in place,")
+            print("    but dependencies were not modified.")
+            print("[+] Git update complete.")
+            return
 
-            # --- Reuse existing venv and re-install requirements, if present ---
-            venv_path = repo_dir / "venv"
-            req = repo_dir / "requirements.txt"
+        pip = venv_path / "bin" / "pip"
+        if not pip.exists():
+            print(f"[*] Expected pip at {pip}, but it does not exist.")
+            print("    Skipping dependency reinstall. Your virtualenv might be broken;")
+            print("    consider re-running a full install.")
+            print("[+] Git update complete.")
+            return
 
-            if not venv_path.exists():
-                print("[*] No existing virtualenv found at:", venv_path)
-                print("    Skipping dependency reinstall. If you changed requirements.txt,")
-                print("    consider running a full install or creating a venv manually.")
-                print("[+] Git update complete.")
-                return
+        print("[+] Reinstalling Python dependencies in existing virtualenv …")
+        try:
+            run([str(pip), "install", "--upgrade", "pip"])
+            run([str(pip), "install", "-r", str(req)])
+        except subprocess.CalledProcessError as exc:
+            eprint(f"[!] Dependency reinstall failed: {exc}")
+            raise SystemExit("Git update succeeded, but dependency installation failed.")
 
-            if not req.exists():
-                print("[*] No requirements.txt found at:", req)
-                print("    Skipping dependency reinstall. Your code changes are in place,")
-                print("    but dependencies were not modified.")
-                print("[+] Git update complete.")
-                return
-
-            pip = venv_path / "bin" / "pip"
-            if not pip.exists():
-                print(f"[*] Expected pip at {pip}, but it does not exist.")
-                print("    Skipping dependency reinstall. Your virtualenv might be broken;")
-                print("    consider re-running a full install.")
-                print("[+] Git update complete.")
-                return
-
-            print("[+] Reinstalling Python dependencies in existing virtualenv …")
-            try:
-                run([str(pip), "install", "--upgrade", "pip"])
-                run([str(pip), "install", "-r", str(req)])
-            except subprocess.CalledProcessError as exc:
-                eprint(f"[!] Dependency reinstall failed: {exc}")
-                raise SystemExit("Git update succeeded, but dependency installation failed.")
-
-            print("[+] Git update and dependency refresh complete.")
+        print("[+] Git update and dependency refresh complete.")
 
     def download_or_copy(self, loc):
         """

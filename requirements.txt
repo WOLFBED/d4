@@ -3,3 +3,6 @@ PyYAML>=6.0
 requests>=2.31.0
 beautifulsoup4>=4.12.0
 validators>=0.20.0
+certifi
+websockets
+curl_cffi

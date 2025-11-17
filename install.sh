@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# this for arch-based: garuda, manjaro, cachyos
+# this for arch-based linuxes. tested with success on :: garuda, manjaro, cachyos
+# all other distros, probably won't work.
 set -euo pipefail
 
 installer_dir="d4"
@@ -75,7 +76,7 @@ echo "[+] Installing dependencies…"
 sudo pacman -S --noconfirm \
     git curl unzip ffmpeg python python-pip python-virtualenv python-mutagen deno brotli atomicparsley python-xattr python-pycryptodome yay
 #yay -S phantomjs --noconfirm --skipreview --nocleanmenu --nodiffmenu --noeditmenu
-paru -S phantomjs --noconfirm --skipreview # --batchinstall
+# paru -S phantomjs --noconfirm --skipreview # --batchinstall -- this is defunct anyways, so no
 
 
 # --- Run installer (auto-yes recommended to skip prompts) ---
@@ -98,64 +99,3 @@ if [[ -d "$HOME/Desktop/$installer_dir" ]]; then
             ;;
     esac
 fi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
-#
-#set -euo pipefail
-#
-#echo "[+] Updating Arch system packages…"
-#sudo pacman -Syu --noconfirm
-#
-#echo "[+] Installing dependencies…"
-#sudo pacman -S --noconfirm \
-#    git curl unzip ffmpeg python python-pip python-virtualenv deno
-#
-#echo "[+] Running Zyng installer…"
-#python3 zyngInstaller.py
-#
-#echo "[*] d4 installer finished."
-#
-#if [[ -d "$HOME/Desktop/d4" ]]; then
-#    echo
-#    read -r -p "Would you like to delete the temporary ~/Desktop/d4 directory? [y/N]: " RESP
-#    case "$RESP" in
-#        [yY]|[yY][eE][sS])
-#            echo "[*] Removing directory…"
-#            rm -rf "$HOME/Desktop/d4"
-#            echo "[*] Cleanup complete."
-#            ;;
-#        *)
-#            echo "[*] Leaving directory intact."
-#            ;;
-#    esac
-#fi

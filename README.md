@@ -48,7 +48,7 @@ These commands take care of all the dependencies at once and install dealer to ~
 - ffmpeg
 
 ### For Arch based distros
-Tested on Garuda, CachyOS, and Manjaro.
+Tested on Garuda, CachyOS, and Manjaro --> works great!
 ```bash
 cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/ \
 && chmod +x zyngInstaller.py install.sh && ./install.sh
@@ -57,53 +57,20 @@ cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/ \
 ### For Ubunto based distros
 Tested on Pop!_OS, TUXEDO OS, and Ubuntu.
 ```bash
-#sudo apt update && \
-#sudo apt install -y git curl unzip python3.12-venv python3-pip ffmpeg && \
-#curl -L https://github.com/WOLFBED/d4/archive/refs/tags/tempo.zip -o d4.zip && \
-#unzip d4.zip -d d4 && \
-#cd d4 && \
-#chmod +x zyngInstaller.py fedora_install.sh && \
-#./ubuntu_install.sh
-
-#sudo apt update && \
-#sudo apt install -y git curl unzip python3.12-venv python3-pip ffmpeg && \
-#curl -fsSL https://deno.land/install.sh | sh && \
-#cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4 && \
-#chmod +x zyngInstaller.py ubuntu_install.sh && \
-#./ubuntu_install.sh
+# no success with these.  sorry.
 ```
 
 ### For Fedora based distros
 Tested on Fedora KDE and Bazzite.
 ```bash
-#sudo dnf update && \
-#sudo dnf install -y curl unzip && \
-#curl -L https://raw.githubusercontent.com/WOLFBED/d4/refs/heads/master/fedora_install.sh -o fedora_install.sh && \
-#chmod +x fedora_install.sh && \
-#./fedora_install.sh
-
-#unzip dealer.zip -d dealer_install && \
-#cd dealer_install && \
-
-
-#sudo dnf update && \
-#sudo dnf install -y git curl unzip python3.12-venv python3-pip ffmpeg && \
-#curl -fsSL https://deno.land/install.sh | sh && \
-#cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4 && \
-#chmod +x zyngInstaller.py fedora_install.sh && \
-#./fedora_install.sh
+# no success with these.  sorry.
 ```
 
 
 ### For Suse based distros
 Tested on OpenSUSE Tumbleweed.
 ```bash
-#sudo zypper refresh && \
-#sudo zypper install -y git curl unzip python3.12-venv python3-pip ffmpeg && \
-#curl -fsSL https://deno.land/install.sh | sh && \
-#git clone https://github.com/wolfbed/d4 && \ cd d4 && \ 
-#chmod +x zyngInstaller.py suse_install.sh && \
-#./suse_install.sh
+# no success with these.  sorry.
 ```
 
 &nbsp;

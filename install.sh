@@ -5,7 +5,7 @@ set -euo pipefail
 installer_dir="d4"
 
 # --- Prepare workspace ---
-cd "$HOME/Desktop/"
+#cd "$HOME/Desktop/"
 #mkdir -p $installer_dir
 #installer_dir = "$HOME/Desktop/$installer_dir"
 #cd $installer_dir

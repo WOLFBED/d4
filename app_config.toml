@@ -7,11 +7,18 @@ icon = "data/icons/d4.png"
 installer_dir = "dealer_install"
 
 [source]
-type = "url"
-location = "https://github.com/WOLFBED/d4/archive/refs/tags/tempo.zip"
-sha256 = "fb4284926ff4d9f210606ab808471ea795865e267ce2bc08b154a63df9682e85"
+type = "git"
+location = "https://github.com/WOLFBED/d4"
+sha256 = ""
 gpg_key = ""
 gpg_signature = ""
+
+#[source]
+#type = "url"
+#location = "https://github.com/WOLFBED/d4/archive/refs/tags/tempo.zip"
+#sha256 = "fb4284926ff4d9f210606ab808471ea795865e267ce2bc08b154a63df9682e85"
+#gpg_key = ""
+#gpg_signature = ""
 
 [required_apps]
 apps = ["deno"]

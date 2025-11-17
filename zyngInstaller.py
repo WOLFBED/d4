@@ -28,10 +28,30 @@ except ImportError:
 
 
 def eprint(*a, **k):
+    """Print messages to standard error."""
     print(*a, file=sys.stderr, **k)
 
 
 def run(cmd, check=True, capture=False, env=None):
+    """
+    Run a subprocess command with optional output capture.
+
+    Parameters
+    ----------
+    cmd:
+        Command to execute, either as a list/tuple of arguments or a shell-like string.
+    check:
+        If True, raise CalledProcessError on non-zero exit code.
+    capture:
+        If True, capture stdout and stderr and return them in the CompletedProcess.
+    env:
+        Optional environment dict to pass to subprocess.run().
+
+    Returns
+    -------
+    subprocess.CompletedProcess
+        The completed process object.
+    """
     if isinstance(cmd, (list, tuple)):
         pass
     else:
@@ -46,12 +66,40 @@ def run(cmd, check=True, capture=False, env=None):
 
 
 def ensure_dir(p: Path, exist_ok=True):
+    """
+    Ensure that a directory exists, creating parent directories as needed.
+
+    Parameters
+    ----------
+    p:
+        Path of the directory to create.
+    exist_ok:
+        Passed through to Path.mkdir(); if False, raising on existing directory.
+
+    Returns
+    -------
+    Path
+        The expanded, ensured directory path.
+    """
     p = Path(p).expanduser()
     p.mkdir(parents=True, exist_ok=exist_ok)
     return p
 
 
 def sha256sum(path: Path):
+    """
+    Compute the SHA256 checksum of a file.
+
+    Parameters
+    ----------
+    path:
+        Path to the file to hash.
+
+    Returns
+    -------
+    str
+        Hex-encoded SHA256 digest of the file contents.
+    """
     h = hashlib.sha256()
     with open(path, "rb") as f:
         for chunk in iter(lambda: f.read(8192), b""):
@@ -63,7 +111,19 @@ def sha256sum(path: Path):
 # Installer Class
 # -------------------------------------------------------------
 class Installer:
+    """High-level orchestrator for installing a Python application from a release archive."""
+
     def __init__(self, cfg_path: Path, args):
+        """
+        Initialize the installer from a TOML configuration file and CLI arguments.
+
+        Parameters
+        ----------
+        cfg_path:
+            Path to the TOML configuration file.
+        args:
+            Parsed argparse.Namespace containing CLI options.
+        """
         self.args = args
         self.cfg_path = cfg_path.expanduser()
         self.load_config()
@@ -90,6 +150,14 @@ class Installer:
         self.vpython = sys.executable
 
     def load_config(self):
+        """
+        Load and validate the installer configuration from disk.
+
+        Raises
+        ------
+        SystemExit
+            If the configuration file is missing or required keys are absent.
+        """
         if not self.cfg_path.exists():
             raise SystemExit(f"Config file not found: {self.cfg_path}")
         with open(self.cfg_path, "rb") as f:
@@ -106,8 +174,22 @@ class Installer:
     # -------------------------------------------------------------
     def fetch_latest_github_release(self, repo: str) -> Path:
         """
-        repo format: 'OWNER/REPO'
-        Downloads the newest release archive and returns the local file path.
+        Download the newest GitHub release archive for a repository.
+
+        Parameters
+        ----------
+        repo:
+            Repository in the form ``'OWNER/REPO'``.
+
+        Returns
+        -------
+        Path
+            Local filesystem path to the downloaded archive.
+
+        Raises
+        ------
+        SystemExit
+            If the release has no assets or no suitable archive asset.
         """
         api = f"https://api.github.com/repos/{repo}/releases/latest"
         print(f"[+] querying GitHub releases: {api}")
@@ -144,6 +226,14 @@ class Installer:
     # Required App Logic (no package manager usage)
     # -------------------------------------------------------------
     def _get_required_apps(self) -> list[str]:
+        """
+        Resolve the list of required external applications from the config.
+
+        Returns
+        -------
+        list[str]
+            List of application names that must be present on PATH.
+        """
         section = self.config.get("required_apps") or {}
         if not isinstance(section, dict):
             return []
@@ -159,6 +249,11 @@ class Installer:
         NOTE: This does not install anything via a package manager.
         Any installation of system packages should be handled by
         install.sh or similar scripts.
+
+        Raises
+        ------
+        SystemExit
+            If required applications are missing.
         """
         required = self._get_required_apps()
         if not required:
@@ -182,6 +277,23 @@ class Installer:
     # Source Preparation (MODIFIED)
     # -------------------------------------------------------------
     def prepare_source(self):
+        """
+        Fetch and unpack the application source according to the configuration.
+
+        For ``type="git"`` this downloads the latest GitHub release archive.
+        For ``type="url"`` or ``"archive"`` this downloads or copies the given location,
+        verifies the checksum if provided, and extracts the archive.
+
+        Returns
+        -------
+        Path
+            Path to the extracted source root directory.
+
+        Raises
+        ------
+        SystemExit
+            If the source type is unknown or checksum verification fails.
+        """
         stype = self.source_cfg.get("type", "git")
         loc = self.source_cfg["location"]
 
@@ -207,6 +319,24 @@ class Installer:
             raise SystemExit(f"Unknown source type: {stype}")
 
     def download_or_copy(self, loc):
+        """
+        Download a remote file or copy a local file into the temporary directory.
+
+        Parameters
+        ----------
+        loc:
+            URL or local filesystem path to the archive.
+
+        Returns
+        -------
+        Path
+            Destination path of the downloaded or copied file.
+
+        Raises
+        ------
+        SystemExit
+            If a local source path does not exist.
+        """
         dest = self.tmpdir / "download"
         if loc.startswith(("http://", "https://")):
             print(f"  - downloading {loc}")
@@ -222,6 +352,24 @@ class Installer:
     # Archive Extraction (unchanged)
     # -------------------------------------------------------------
     def extract_archive(self, pathobj):
+        """
+        Extract a supported archive into the temporary source directory.
+
+        Parameters
+        ----------
+        pathobj:
+            Path-like object pointing to the archive file.
+
+        Returns
+        -------
+        Path
+            The resolved source root directory inside the extraction directory.
+
+        Raises
+        ------
+        SystemExit
+            If the archive format is unsupported or the app structure is invalid.
+        """
         path = Path(pathobj)
         print(f"  - extracting {path}")
 
@@ -247,6 +395,19 @@ class Installer:
         return root
 
     def validate_app_structure(self, root: Path):
+        """
+        Validate that the extracted source tree has the expected layout.
+
+        Parameters
+        ----------
+        root:
+            Path to the extracted source root directory.
+
+        Raises
+        ------
+        SystemExit
+            If required directories are missing.
+        """
         for r in ("src", "data"):
             if not (root / r).exists():
                 raise SystemExit(f"Invalid app structure: missing {r}/")
@@ -258,6 +419,12 @@ class Installer:
     # Installation (unchanged)
     # -------------------------------------------------------------
     def atomic_move_into_place(self):
+        """
+        Move the prepared source tree into the versioned install directory.
+
+        Existing versions are archived into the ``archives`` directory and the
+        ``-current`` symlink is updated to point to the new version.
+        """
         if self.versioned_dir.exists():
             ts = time.strftime("%Y%m%d%H%M%S")
             archive_target = self.archives_dir / f"{self.appname}-{self.version}-{ts}"
@@ -275,6 +442,14 @@ class Installer:
         )
 
     def setup_venv_and_requirements(self):
+        """
+        Optionally create a virtual environment and install Python dependencies.
+
+        Returns
+        -------
+        Path | None
+            Path to the created virtual environment, or None if disabled.
+        """
         if not self.config.get("setup_venv", True):
             return None
 
@@ -292,6 +467,12 @@ class Installer:
         return venv_path
 
     def install_fonts(self):
+        """
+        Optionally install bundled fonts into the user's font directory.
+
+        Fonts are copied under ``~/.local/share/fonts/<appname>-<version>`` and
+        the font cache is refreshed.
+        """
         fonts_dir = self.versioned_dir / "data" / "fonts"
         if not fonts_dir.exists():
             return
@@ -313,6 +494,20 @@ class Installer:
         run(["fc-cache", "-f", str(target)], check=False)
 
     def create_launcher(self, venv_path=None):
+        """
+        Create a launcher script in ``~/.local/bin`` for the installed application.
+
+        Parameters
+        ----------
+        venv_path:
+            Optional path to a virtual environment whose activation should be
+            sourced before running the app.
+
+        Returns
+        -------
+        Path
+            Path to the created launcher script.
+        """
         entry = self.config.get("entrypoint", "src/app/zyngInstaller.py")
         launcher = self.local_bin / self.appname
 
@@ -329,6 +524,14 @@ class Installer:
         return launcher
 
     def create_desktop_entry(self, launcher):
+        """
+        Create a ``.desktop`` entry for the application in the user's applications directory.
+
+        Parameters
+        ----------
+        launcher:
+            Path to the launcher script that should be invoked by the desktop entry.
+        """
         desktop_dir = Path("~/.local/share/applications").expanduser()
         ensure_dir(desktop_dir)
 
@@ -359,6 +562,14 @@ class Installer:
     # Cleanup & Rollback (unchanged)
     # -------------------------------------------------------------
     def clean_old_archives(self, keep):
+        """
+        Remove old archived versions, keeping only the newest ``keep`` entries.
+
+        Parameters
+        ----------
+        keep:
+            Number of archives to retain.
+        """
         entries = sorted(self.archives_dir.glob(f"{self.appname}-*"),
                          key=os.path.getmtime,
                          reverse=True)
@@ -410,6 +621,17 @@ class Installer:
     # Installation Orchestration
     # -------------------------------------------------------------
     def install(self):
+        """
+        Perform a full installation run using the current configuration.
+
+        Steps:
+          1. Prepare and extract the source.
+          2. Move it into place as the new version.
+          3. Optionally create a virtualenv and install requirements.
+          4. Optionally install fonts.
+          5. Create launcher and desktop entry.
+          6. Optionally prune old archives.
+        """
         self.prepare_source()
         self.atomic_move_into_place()
         venv = self.setup_venv_and_requirements()
@@ -422,6 +644,14 @@ class Installer:
             self.clean_old_archives(self.args.keep)
 
     def uninstall(self, remove_all=False):
+        """
+        Uninstall the application.
+
+        Parameters
+        ----------
+        remove_all:
+            If True, remove the entire install root; otherwise only the configured version.
+        """
         if remove_all:
             shutil.rmtree(self.install_root, ignore_errors=True)
         else:
@@ -430,6 +660,21 @@ class Installer:
         print("[+] Uninstall complete.")
 
     def prompt_yesno(self, q, default=True):
+        """
+        Prompt the user with a yes/no question, honoring the ``--yes`` flag.
+
+        Parameters
+        ----------
+        q:
+            Question to display.
+        default:
+            Default answer if the user just presses Enter.
+
+        Returns
+        -------
+        bool
+            True for yes, False for no.
+        """
         if self.args.yes:
             return default
         while True:
@@ -446,6 +691,12 @@ class Installer:
 # Main
 # -------------------------------------------------------------
 def main():
+    """
+    Command-line entry point for the installer script.
+
+    Parses arguments, constructs an Installer, and dispatches to install,
+    uninstall, or rollback operations.
+    """
     ap = argparse.ArgumentParser(description="Installer for Python apps with GitHub-release fetch")
     ap.add_argument("--config", "-c", required=True)
     ap.add_argument("--install-root")

@@ -572,6 +572,7 @@ class Installer:
         with open(desktop, "w") as f:
             f.write("[Desktop Entry]\n")
             f.write("Type=Application\n")
+            f.write("Comment=Download a/v media from the net!\n")
             f.write(f"Name={self.appname}\n")
             f.write(f"Exec={launcher} %U\n")
             f.write(f"Icon={icon_abs}\n")

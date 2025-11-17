@@ -6,9 +6,9 @@ installer_dir="d4"
 
 # --- Prepare workspace ---
 cd "$HOME/Desktop/"
-mkdir -p $installer_dir
-installer_dir = "$HOME/Desktop/$installer_dir"
-cd $installer_dir
+#mkdir -p $installer_dir
+#installer_dir = "$HOME/Desktop/$installer_dir"
+#cd $installer_dir
 
 # Path to the TOML file
 TOML_FILE="app_config.toml"

@@ -50,8 +50,8 @@ These commands take care of all the dependencies at once and install dealer to ~
 ### For Arch based distros
 Tested on Garuda, CachyOS, and Manjaro.
 ```bash
-cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/src/app/ && \
-python main.py
+cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/src/app/ \
+&& chmod +x zyngInstaller.py install.sh && ./install.sh
 ```
 
 ### For Ubunto based distros

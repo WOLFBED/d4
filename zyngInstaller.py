@@ -473,6 +473,10 @@ class Installer:
         Fonts are copied under ``~/.local/share/fonts/<appname>-<version>`` and
         the font cache is refreshed.
         """
+        # Allow CLI to fully skip font installation
+        if getattr(self.args, "skip_fonts", False):
+            return
+
         fonts_dir = self.versioned_dir / "data" / "fonts"
         if not fonts_dir.exists():
             return
@@ -706,6 +710,7 @@ def main():
     ap.add_argument("--keep", type=int, default=3)
     ap.add_argument("--rollback", action="store_true")
     ap.add_argument("--yes", action="store_true")
+    ap.add_argument("--skip-fonts", action="store_true", help="Skip installation of bundled fonts")
     args = ap.parse_args()
 
     inst = Installer(Path(args.config), args)

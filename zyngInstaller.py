@@ -299,10 +299,13 @@ class Installer:
 
         print(f"[+] preparing source (type={stype})")
 
+        # if stype == "git":
+        #     # Now: fetch latest GitHub release instead of git clone
+        #     archive = self.fetch_latest_github_release(loc)
+        #     return self.extract_archive(archive)
         if stype == "git":
-            # Now: fetch latest GitHub release instead of git clone
-            archive = self.fetch_latest_github_release(loc)
-            return self.extract_archive(archive)
+            # old bit where it does git clone etc.
+            return self.clone_git(loc, self.source_cfg.get("ref"))
 
         elif stype in ("url", "archive"):
             path = self.download_or_copy(loc)
@@ -317,6 +320,22 @@ class Installer:
 
         else:
             raise SystemExit(f"Unknown source type: {stype}")
+
+    def clone_git(self, url, ref=None):
+        git_bin = shutil.which("git")
+        if not git_bin:
+            raise SystemExit("git not found; required for git source type.")
+        clone_dir = self.tmpdir / "src"
+        print(f"  - git clone {url} → {clone_dir}")
+        run([git_bin, "clone", "--depth", "1", url, str(clone_dir)])
+        if ref:
+            try:
+                run([git_bin, "-C", str(clone_dir), "fetch", "--depth", "1", "origin", ref])
+                run([git_bin, "-C", str(clone_dir), "checkout", ref])
+            except subprocess.CalledProcessError:
+                eprint("Warning: failed to fetch/ref; using HEAD")
+        self.source_root = clone_dir
+        return clone_dir
 
     def download_or_copy(self, loc):
         """

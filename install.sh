@@ -74,8 +74,8 @@ TOML_FILE="app_config.toml"
 
 echo "[+] Installing dependencies…"
 sudo pacman -S --noconfirm \
-    git curl unzip ffmpeg python python-pip python-virtualenv python-mutagen deno brotli atomicparsley python-xattr python-pycryptodome yay
-#yay -S phantomjs --noconfirm --skipreview --nocleanmenu --nodiffmenu --noeditmenu
+    git curl unzip ffmpeg python python-pip python-virtualenv python-mutagen deno brotli atomicparsley python-xattr python-pycryptodome # paru
+# yay -S phantomjs --noconfirm --skipreview --nocleanmenu --nodiffmenu --noeditmenu
 # paru -S phantomjs --noconfirm --skipreview # --batchinstall -- this is defunct anyways, so no
 
 

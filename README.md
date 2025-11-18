@@ -44,10 +44,16 @@ These commands take care of all the dependencies at once and install dealer to ~
 - python3.12-venv
 - python3-pip
 - ffmpeg
-- among other things...
+- python-mutagen
+- brotli
+- atomicparsley
+- python-xattr
+- python-pycryptodome
+- yay / pura
 
 ## Arch based distros
 Tested on Garuda, CachyOS, and Manjaro --> works great!
+RebornOS, Archcraft, EndeavorOS...
 
 ### Install
 ```bash
@@ -58,7 +64,7 @@ cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/ \
 ### Update
 ```bash
 cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/ \
-python zyngInstaller.py --config app_config.toml --skip-fonts --update-git
+&& python zyngInstaller.py --config app_config.toml --skip-fonts --update-git
 ```
 
 ## Other distros...
@@ -96,6 +102,6 @@ Tested on OpenSUSE Tumbleweed.
 
 ## Requirements
 - x86_64 linux 6+
-- python 3.10+ & pip
+- python 3.10+
 
 

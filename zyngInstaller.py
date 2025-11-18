@@ -666,6 +666,68 @@ class Installer:
         desktop.chmod(0o644)
         print(f"[+] desktop entry: {desktop}")
 
+        # Refresh KDE application cache so the new entry appears immediately
+        self.refresh_kde_app_cache()
+
+
+    def refresh_kde_app_cache(self):
+        """
+        Ask KDE Plasma (if present) to rebuild its application menu cache so
+        newly installed or removed .desktop entries take effect immediately.
+        """
+        for cmd in ("kbuildsycoca6", "kbuildsycoca5", "kbuildsycoca"):
+            bin_path = shutil.which(cmd)
+            if bin_path:
+                try:
+                    print(f"[+] Refreshing KDE application cache via {cmd} …")
+                    run([bin_path], check=False)
+                    break
+                except Exception as exc:
+                    eprint(f"[!] Failed to run {cmd}: {exc}")
+        # If no kbuildsycoca is present, we silently do nothing.
+
+
+    def uninstall(self, remove_all=False):
+        """
+        Uninstall the application.
+
+        Parameters
+        ----------
+        remove_all:
+            If True, remove the entire install root; otherwise only the configured version.
+        """
+        # Remove installation directories
+        if remove_all:
+            shutil.rmtree(self.install_root, ignore_errors=True)
+        else:
+            if self.versioned_dir.exists():
+                shutil.rmtree(self.versioned_dir, ignore_errors=True)
+
+            # Also remove launcher from ~/.local/bin
+            launcher = self.local_bin / self.appname
+            if launcher.exists():
+                try:
+                    launcher.unlink()
+                    print(f"[+] Removed launcher: {launcher}")
+                except OSError as exc:
+                    eprint(f"[!] Failed to remove launcher {launcher}: {exc}")
+
+            # Remove any .desktop entries for this app from ~/.local/share/applications
+            desktop_dir = Path("~/.local/share/applications").expanduser()
+            pattern = f"{self.appname}-*.desktop"
+            if desktop_dir.exists():
+                for desktop_file in desktop_dir.glob(pattern):
+                    try:
+                        desktop_file.unlink()
+                        print(f"[+] Removed desktop entry: {desktop_file}")
+                    except OSError as exc:
+                        eprint(f"[!] Failed to remove desktop entry {desktop_file}: {exc}")
+
+            # Refresh KDE cache after removal so entries disappear immediately
+            self.refresh_kde_app_cache()
+
+            print("[+] Uninstall complete.")
+
     # -------------------------------------------------------------
     # Cleanup & Rollback (unchanged)
     # -------------------------------------------------------------
@@ -751,54 +813,54 @@ class Installer:
         if self.args.auto_clean_archives:
             self.clean_old_archives(self.args.keep)
 
-        def uninstall(self, remove_all=False):
-            """
-            Uninstall the application.
+    def uninstall(self, remove_all=False):
+        """
+        Uninstall the application.
 
-            Parameters
-            ----------
-            remove_all:
-                If True, remove the entire install root; otherwise only the configured version.
-            """
-            # Remove installation directories
-            if remove_all:
-                shutil.rmtree(self.install_root, ignore_errors=True)
-            else:
-                if self.versioned_dir.exists():
-                    shutil.rmtree(self.versioned_dir, ignore_errors=True)
+        Parameters
+        ----------
+        remove_all:
+            If True, remove the entire install root; otherwise only the configured version.
+        """
+        # Remove installation directories
+        if remove_all:
+            shutil.rmtree(self.install_root, ignore_errors=True)
+        else:
+            if self.versioned_dir.exists():
+                shutil.rmtree(self.versioned_dir, ignore_errors=True)
 
-                # Also remove launcher from ~/.local/bin
-                launcher = self.local_bin / self.appname
-                if launcher.exists():
+            # Also remove launcher from ~/.local/bin
+            launcher = self.local_bin / self.appname
+            if launcher.exists():
+                try:
+                    launcher.unlink()
+                    print(f"[+] Removed launcher: {launcher}")
+                except OSError as exc:
+                    eprint(f"[!] Failed to remove launcher {launcher}: {exc}")
+
+            # Remove any .desktop entries for this app from ~/.local/share/applications
+            desktop_dir = Path("~/.local/share/applications").expanduser()
+            pattern = f"{self.appname}-*.desktop"
+            if desktop_dir.exists():
+                for desktop_file in desktop_dir.glob(pattern):
                     try:
-                        launcher.unlink()
-                        print(f"[+] Removed launcher: {launcher}")
+                        desktop_file.unlink()
+                        print(f"[+] Removed desktop entry: {desktop_file}")
                     except OSError as exc:
-                        eprint(f"[!] Failed to remove launcher {launcher}: {exc}")
+                        eprint(f"[!] Failed to remove desktop entry {desktop_file}: {exc}")
 
-                # Remove any .desktop entries for this app from ~/.local/share/applications
-                desktop_dir = Path("~/.local/share/applications").expanduser()
-                pattern = f"{self.appname}-*.desktop"
-                if desktop_dir.exists():
-                    for desktop_file in desktop_dir.glob(pattern):
-                        try:
-                            desktop_file.unlink()
-                            print(f"[+] Removed desktop entry: {desktop_file}")
-                        except OSError as exc:
-                            eprint(f"[!] Failed to remove desktop entry {desktop_file}: {exc}")
+            # Ask KDE Plasma to rebuild its application menu cache so entries disappear immediately
+            for cmd in ("kbuildsycoca6", "kbuildsycoca5", "kbuildsycoca"):
+                bin_path = shutil.which(cmd)
+                if bin_path:
+                    try:
+                        print(f"[+] Refreshing KDE application cache via {cmd} …")
+                        run([bin_path], check=False)
+                        break
+                    except Exception as exc:
+                        eprint(f"[!] Failed to run {cmd}: {exc}")
 
-                # Ask KDE Plasma to rebuild its application menu cache so entries disappear immediately
-                for cmd in ("kbuildsycoca6", "kbuildsycoca5", "kbuildsycoca"):
-                    bin_path = shutil.which(cmd)
-                    if bin_path:
-                        try:
-                            print(f"[+] Refreshing KDE application cache via {cmd} …")
-                            run([bin_path], check=False)
-                            break
-                        except Exception as exc:
-                            eprint(f"[!] Failed to run {cmd}: {exc}")
-
-                print("[+] Uninstall complete.")
+            print("[+] Uninstall complete.")
 
     def prompt_yesno(self, q, default=True):
         """

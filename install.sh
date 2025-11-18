@@ -67,15 +67,11 @@ TOML_FILE="app_config.toml"
 #secretstorage* - For --cookies-from-browser to access the Gnome keyring while decrypting cookies of Chromium-based browsers on Linux. Licensed under BSD-3-Clause
 # *** NOT CURRENTLY USING THIS ***
 #https://github.com/mitya57/secretstorage
-#
-
-
 
 
 echo "[+] Installing dependencies…"
 sudo pacman -S --noconfirm \
     git curl unzip ffmpeg python python-pip python-virtualenv python-mutagen deno brotli atomicparsley python-xattr python-pycryptodome # paru
-# yay -S phantomjs --noconfirm --skipreview --nocleanmenu --nodiffmenu --noeditmenu
 # paru -S phantomjs --noconfirm --skipreview # --batchinstall -- this is defunct anyways, so no
 
 
@@ -85,17 +81,43 @@ python zyngInstaller.py --config app_config.toml --skip-fonts
 
 echo "[*] d4 installer finished."
 
+
+#if [[ -d "$HOME/Desktop/$installer_dir" ]]; then
+#    echo
+#    read -r -p "Would you like to delete the temporary directory? [Y/n]: " RESP
+#    case "$RESP" in
+#        [yY]|[yY][eE][sS])
+#            echo "[*] Removing directory…"
+#            rm -rf "$HOME/Desktop/$installer_dir"
+#            echo "[*] Cleanup complete."
+#            ;;
+#        *)
+#            echo "[*] Leaving directory intact."
+#            ;;
+#    esac
+#fi
+
+
+# Default to Y, instead of N...
+#if [[ -d "$HOME/Desktop/$installer_dir" ]]; then
+#    echo
+#    read -r -p "Would you like to delete the temporary directory? [Y/n]: " RESP
+#    case "$RESP" in
+#        [nN]|[nN][eE][sS])
+#            echo "[*] Leaving directory intact."
+#            ;;
+#        *)
+#            echo "[*] Removing directory…"
+#            rm -rf "$HOME/Desktop/$installer_dir"
+#            echo "[*] Cleanup complete."
+#            ;;
+#    esac
+#fi
+
+
+# just frigging remove it
 if [[ -d "$HOME/Desktop/$installer_dir" ]]; then
-    echo
-    read -r -p "Would you like to delete the temporary directory? [y/N]: " RESP
-    case "$RESP" in
-        [yY]|[yY][eE][sS])
-            echo "[*] Removing directory…"
-            rm -rf "$HOME/Desktop/$installer_dir"
-            echo "[*] Cleanup complete."
-            ;;
-        *)
-            echo "[*] Leaving directory intact."
-            ;;
-    esac
+    echo "Removing temporary directory"
+    rm -rf "$HOME/Desktop/$installer_dir"
+    echo "[*] Cleanup complete."
 fi

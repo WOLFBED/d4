@@ -35,7 +35,12 @@ dealer version 4 ~ includes GUI -- A video downloader.  It deals.
 &nbsp;
 ***
 
-## Installation, Updates, Removal
+## Requirements
+- x86_64 linux 6+
+- python 3.10+
+
+
+## Installation, Update, Removal
 These commands take care of all the dependencies at once and install dealer to ~/zyng/apps/dealer/.  Be aware this *may* install on your system:
 - git
 - deno
@@ -49,11 +54,17 @@ These commands take care of all the dependencies at once and install dealer to ~
 - atomicparsley
 - python-xattr
 - python-pycryptodome
-- yay / pura
+- ~~yay / pura~~ nope, this was for phantomJS, but it's not needed anymore.
+
 
 ## Arch based distros
-Tested on Garuda, CachyOS, and Manjaro --> works great!
-RebornOS, Archcraft, EndeavorOS...
+Tested and works great on:
+- Garuda dr460nized zen 251002
+- Mercury Neo 2025-03-19
+- Archcraft 2025.10.16 -- first time I've tried this -- very nice aesthetics!
+- RebornOS 2025.07.09
+- Manjaro Cinnamon 25.0.3-250609
+- CachyOS 250828
 
 ### Install
 ```bash
@@ -103,11 +114,7 @@ Tested on OpenSUSE Tumbleweed.
 - [ ]  ensure yt-dlp is aware of path to ffmpeg, deno, aria2, etc.
 - [ ]  ~~fix deno path for ubuntu~~
 - [ ]  remove fonts and just have dealer use generic monospace font -- MAKE SURE THIS ACTUALLY WORKS!!!!!!
-- [ ]  remove git requirement on end user's system
+- [X]  remove git requirement on end user's system
 - [ ]  ???
-
-## Requirements
-- x86_64 linux 6+
-- python 3.10+
 
 

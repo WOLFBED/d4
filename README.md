@@ -36,8 +36,6 @@ dealer version 4 ~ includes GUI -- A video downloader.  It deals.
 ***
 
 ## Installation, Updates, Removal
-
-### N.B. I'm currently working on making an AppImage for this, that will be way easier and cleaner to install.  The following only partially works and will dirty-up your system.  Avoid for now unless you really know what you're doing.
 These commands take care of all the dependencies at once and install dealer to ~/zyng/apps/dealer/.  Be aware this *may* install on your system:
 - git
 - deno
@@ -46,44 +44,41 @@ These commands take care of all the dependencies at once and install dealer to ~
 - python3.12-venv
 - python3-pip
 - ffmpeg
+- among other things...
 
-### Install - Arch based distros
+## Arch based distros
 Tested on Garuda, CachyOS, and Manjaro --> works great!
+
+### Install
 ```bash
 cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/ \
 && chmod +x zyngInstaller.py install.sh && ./install.sh
 ```
 
-### Update - Arch based distros
-Tested on Garuda, CachyOS, and Manjaro --> works great!
+### Update
 ```bash
 cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/ \
 python zyngInstaller.py --config app_config.toml --skip-fonts --update-git
 ```
 
-### Update - Arch based distros
-Tested on Garuda, CachyOS, and Manjaro --> works great!
-```bash
-cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/ \
-&& chmod +x zyngInstaller.py install.sh && ./install.sh
-```
+## Other distros...
 
-### For Ubunto based distros
+### Ubunto based distros
 Tested on Pop!_OS, TUXEDO OS, and Ubuntu.
 ```bash
-# no success with these.  sorry.
+# installer doesn't work --> n/a
 ```
 
-### For Fedora based distros
+### Fedora based distros
 Tested on Fedora KDE and Bazzite.
 ```bash
-# no success with these.  sorry.
+# installer doesn't work --> n/a
 ```
 
-### For Suse based distros
+### Suse based distros
 Tested on OpenSUSE Tumbleweed.
 ```bash
-# no success with these.  sorry.
+# installer doesn't work --> n/a
 ```
 
 &nbsp;

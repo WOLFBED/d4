@@ -760,12 +760,34 @@ class Installer:
         remove_all:
             If True, remove the entire install root; otherwise only the configured version.
         """
+        # Remove installation directories
         if remove_all:
             shutil.rmtree(self.install_root, ignore_errors=True)
         else:
             if self.versioned_dir.exists():
                 shutil.rmtree(self.versioned_dir, ignore_errors=True)
-        print("[+] Uninstall complete.")
+
+            # Also remove launcher from ~/.local/bin
+            launcher = self.local_bin / self.appname
+            if launcher.exists():
+                try:
+                    launcher.unlink()
+                    print(f"[+] Removed launcher: {launcher}")
+                except OSError as exc:
+                    eprint(f"[!] Failed to remove launcher {launcher}: {exc}")
+
+            # Remove any .desktop entries for this app from ~/.local/share/applications
+            desktop_dir = Path("~/.local/share/applications").expanduser()
+            pattern = f"{self.appname}-*.desktop"
+            if desktop_dir.exists():
+                for desktop_file in desktop_dir.glob(pattern):
+                    try:
+                        desktop_file.unlink()
+                        print(f"[+] Removed desktop entry: {desktop_file}")
+                    except OSError as exc:
+                        eprint(f"[!] Failed to remove desktop entry {desktop_file}: {exc}")
+
+            print("[+] Uninstall complete.")
 
     def prompt_yesno(self, q, default=True):
         """

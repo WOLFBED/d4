@@ -64,13 +64,13 @@ cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/ \
 ### Update
 ```bash
 cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/ \
-&& python zyngInstaller.py --config app_config.toml --skip-fonts --update-git
+&& chmod +x zyngInstaller.py && python zyngInstaller.py --config app_config.toml --skip-fonts --update-git
 ```
 
 ### Remove
 ```bash
 cd "$HOME/Desktop" && git clone https://github.com/wolfbed/d4 && cd d4/ \
-&& python zyngInstaller.py --config app_config.toml --skip-fonts --uninstall --remove-all
+&& chmod +x zyngInstaller.py && python zyngInstaller.py --config app_config.toml --skip-fonts --uninstall --remove-all
 ```
 
 ## Other distros...
